@@ -151,6 +151,15 @@ public class LinearRegression {
         if (city == null || city.isEmpty()) {
             return city;
         }
-        return city.substring(0, 1).toUpperCase() + city.substring(1).toLowerCase();
+        String[] words = city.split("\\s+");
+        StringBuilder formattedCity = new StringBuilder();
+        for (String word : words) {
+            if (!word.isEmpty()) {
+                formattedCity.append(Character.toUpperCase(word.charAt(0)))
+                        .append(word.substring(1).toLowerCase())
+                        .append(" ");
+            }
+        }
+        return formattedCity.toString().trim();
     }
 }
