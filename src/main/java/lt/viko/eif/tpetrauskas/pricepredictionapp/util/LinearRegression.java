@@ -99,20 +99,21 @@ public class LinearRegression {
     }
 
     public double predict(String city, double squareFeet, double bedrooms, double bathrooms) {
+        city = formatCityName(city);
         if (weights == null) {
             throw new IllegalStateException("The model has not been trained yet. Please call the train method before making predictions.");
         }
 
+        if (!cityIndexMap.containsKey(city)) {
+            throw new IllegalArgumentException("City not found in training data: " + city);
+        }
+
         double[] features = new double[weights.length];
-        features[0] = (cityIndexMap.getOrDefault(city, -1) - featureMeans[0]) / featureStdDevs[0];
+        features[0] = (cityIndexMap.get(city) - featureMeans[0]) / featureStdDevs[0];
         features[1] = (squareFeet - featureMeans[1]) / featureStdDevs[1];
         features[2] = (bedrooms - featureMeans[2]) / featureStdDevs[2];
         features[3] = (bathrooms - featureMeans[3]) / featureStdDevs[3];
         features[4] = 1; // bias term
-
-        if (features[0] == -1) {
-            throw new IllegalArgumentException("City not found in training data: " + city);
-        }
 
         return predict(features);
     }
@@ -144,5 +145,12 @@ public class LinearRegression {
         } else {
             throw new IllegalStateException("No trained model found in the database.");
         }
+    }
+
+    public String formatCityName(String city) {
+        if (city == null || city.isEmpty()) {
+            return city;
+        }
+        return city.substring(0, 1).toUpperCase() + city.substring(1).toLowerCase();
     }
 }
