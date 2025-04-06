@@ -9,7 +9,7 @@ import java.util.Map;
 
 @Component
 public class LinearRegression {
-    private static final int MAX_ITERATIONS = 100000;
+    private static final int MAX_ITERATIONS = 1000;
     private static final double LEARNING_RATE = 0.001;
 
     private double[] weights;
