@@ -2,6 +2,7 @@ package lt.viko.eif.tpetrauskas.pricepredictionapp.controller;
 
 import lt.viko.eif.tpetrauskas.pricepredictionapp.service.ApartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,7 +38,7 @@ public class ApartmentController {
     }
 
     @GetMapping("/cities")
-    public List<String> getCities() {
-        return apartmentService.getAllCities();
+    public ResponseEntity<List<String>> getCities() {
+        return ResponseEntity.ok(apartmentService.getAllCities());
     }
 }
