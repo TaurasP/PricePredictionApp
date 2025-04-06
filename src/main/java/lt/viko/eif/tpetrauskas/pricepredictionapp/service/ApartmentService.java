@@ -26,6 +26,7 @@ public class ApartmentService {
     }
 
     public double predictPrice(String city, double squareFeet, double bedrooms, double bathrooms) {
+        linearRegression.loadModelFromDatabase();
         return linearRegression.predict(city, squareFeet, bedrooms, bathrooms);
     }
 

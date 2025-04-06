@@ -1,6 +1,9 @@
 package lt.viko.eif.tpetrauskas.pricepredictionapp.util;
 
 import lt.viko.eif.tpetrauskas.pricepredictionapp.model.Apartment;
+import lt.viko.eif.tpetrauskas.pricepredictionapp.model.LinearRegressionModel;
+import lt.viko.eif.tpetrauskas.pricepredictionapp.repository.LinearRegressionModelRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -9,13 +12,16 @@ import java.util.Map;
 
 @Component
 public class LinearRegression {
-    private static final int MAX_ITERATIONS = 1000;
+    private static final int MAX_ITERATIONS = 100000;
     private static final double LEARNING_RATE = 0.001;
 
     private double[] weights;
     private Map<String, Integer> cityIndexMap;
     private double[] featureMeans;
     private double[] featureStdDevs;
+
+    @Autowired
+    private LinearRegressionModelRepository modelRepository;
 
     public void train(List<Apartment> apartments) {
         int n = apartments.size();
@@ -87,6 +93,9 @@ public class LinearRegression {
 
         // Log weights for debugging
         System.out.println("Weights initialized: " + java.util.Arrays.toString(weights));
+
+        // Save the trained model to the database
+        saveModelToDatabase();
     }
 
     public double predict(String city, double squareFeet, double bedrooms, double bathrooms) {
@@ -114,5 +123,26 @@ public class LinearRegression {
             prediction += features[i] * weights[i];
         }
         return prediction;
+    }
+
+    private void saveModelToDatabase() {
+        LinearRegressionModel model = new LinearRegressionModel();
+        model.setWeights(weights);
+        model.setCityIndexMap(cityIndexMap);
+        model.setFeatureMeans(featureMeans);
+        model.setFeatureStdDevs(featureStdDevs);
+        modelRepository.save(model);
+    }
+
+    public void loadModelFromDatabase() {
+        LinearRegressionModel model = modelRepository.findTopByOrderByIdDesc();
+        if (model != null) {
+            weights = model.getWeights();
+            cityIndexMap = model.getCityIndexMap();
+            featureMeans = model.getFeatureMeans();
+            featureStdDevs = model.getFeatureStdDevs();
+        } else {
+            throw new IllegalStateException("No trained model found in the database.");
+        }
     }
 }
