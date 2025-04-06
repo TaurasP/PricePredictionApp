@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ApartmentService {
 
-    public static final String DATASET_PATH = "/Users/tauras/Documents/Projects/Java/PricePredictionApp/src/main/resources/dataset/apartments_for_rent_classified_100K.csv";
+    public static final String DATASET_PATH = "/Users/tauras/Documents/Projects/Java/PricePredictionApp/src/main/resources/dataset/apartments.csv";
 
     @Autowired
     private ApartmentRepository apartmentRepository;
